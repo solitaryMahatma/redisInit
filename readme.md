@@ -1,41 +1,45 @@
 ```
-### redis安装 ####
+====
+redis安装
+====
 ```
 
-第一步： 电脑安装redis => [redis下载地址](https://github.com/microsoftarchive/redis/releases) 安装符合电脑系统的(我的是win10 64bit )
-
-第二步： 配置redis.windows.conf 参数 找到 appendonly no  把no改成yes
-
-第三步： 开启redis服务 到安装目录打开cmd窗口 并输入命令： redis-server.exe redis.windows.conf
-
-第四部： 双击redis-cli.exe应用程序(第一次开启redis-cli留意appendonly.aof文件，如果没有，一顿set get select 等操作还是没有appendonly.aof文件,就有2中可能，第一appendonly no, 第二，appendonly yes，但是开启的是应用级别redis服务，不是后台进程级别redis服务)，开始测试 set name xiaobai =>下方会输出 ok => get name => 下方输出 xiaobai
-
-注意: (win10安装包即.msi)
-* 不能 双击 redis-server.exe 开启服务
-
-* 开启redis服务 查看任务管理器，如果在应用进程找到redis-server.exe 那么 配置redis.windows.conf 参数 appendonly yes不生效，即不能生成appendonly.aof文件,这点很重要
-
-* win10安装包安装的redis配置可以尝试第三部，如果报参数不合法;在第三部基础上(前提任务管理器应用进程和后台进程都没找到，如果应用进程找到就skill进程) 把 redis.windows.conf 改成redis.windows.conf的绝对路径 这个值要用英文状态下的双引号包住，如果没报错就结束了，去查看任务管理器后台进程，如果找到redis服务，说明已经成功开启redis服务，如果找不到，说明两点，1曾经成功过，只是后台进程被杀死过，重新配置的服务计划本次无法生效，也无法生成appendonly.aof，或者在appendonly.aof文件记录，需要重启电脑；第2点，压根没成功
-
-![my-logo.png](./1.png "my-logo")
-![my-logo.png](./2.png "my-logo")
-![my-logo.png](./3.png "my-logo")
-![my-logo.png](./4.png "my-logo")
-![my-logo.png](./5.png "my-logo")
-![my-logo.png](./6.png "my-logo")
-![my-logo.png](./7.png "my-logo")
-![my-logo.png](./8.png "my-logo")
-
+```
+====
+配置持久化redis
+====
 
 ```
 
-配置redis.windows.conf 参数 appendonly yes 成功的标记
-1.redis-cli 任何操作 appendonly.aof都有记录
-2.redis服务后台进程能够被找到
-3.重启电脑或者重启redis服务 都能通过keys *命令在上次关闭redis服务并且有数据的数据空间找到键值
+```
+* 我安装的是Redis-x64-3.2.100.msi, [redis下载地址](https://github.com/microsoftarchive/redis/releases) 
+
+* 到redis安装目录下找到redis.windows.conf并用笔记打开它， 在 appendonly no处,把no改成yes保存并关闭
+
+* 到redis安装目录 打开cmd窗口 并输入命令： redis-server.exe redis.windows.conf 或者 redis-server.exe "redis.windows.conf文件的绝对路径(注意此值一定要英文双引号包裹住)"， 此处没报错可以执行下一步，如果报错就重启电脑，重新执行这一步，只是更换上一次输入的命令，没有报错，执行下一步，如果还是报错，去网上找解决方案
+
+* 查看任务管理器，在后台进程找到 redis-server.exe说明已经加入电脑服务计划，电脑每次开机redis-server.exe都能在后台进程找到，redis的每次操作行为在appendonly.aof文件；如果在应用进程找到redis-server.exe，说明redis.windows.conf 配置参数不生效或者appendonly no
+
+* 开启 redis-cli.exe 应用程序
+
+* 测试 set name xiaobai
+
+* 观察redis安装目录下有无appendonly.aof文件生成, 如果有说明已经成功配置持久化redis服务，反之失败
 ```
 
-###  项目筹划 ###
+```
+====
+成功开启持久化redis服务的标记
+====
+```
+
+```
+1. redis-cli的任何操作(redis的每次操作行为)appendonly.aof都有记录
+2. redis服务(redis-server.exe)后台进程能够被找到
+3. 重启电脑或者重启redis服务 都能通过keys *命令在上次关闭redis服务并且有数据的数据空间找到键值
+```
+
+###  开始项目 ###
 
 * 1 创建项目目录
 
